@@ -120,7 +120,8 @@ def jinja_format(data, template_file):
     combined_credentials = combined_credential_pair_format(data)
     env = jinja2.Environment(
         loader=GlobalFileLoader(),
-        keep_trailing_newline=True
+        keep_trailing_newline=True,
+        undefined=jinja2.StrictUndefined
     )
     template = env.get_template(template_file)
     return template.render(secrets=combined_credentials['credentials'])
