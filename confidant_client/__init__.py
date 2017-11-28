@@ -61,7 +61,8 @@ class ConfidantClient(object):
             config_files=None,
             profile=None,
             verify=None,
-            kms_endpoint_url=None
+            kms_endpoint_url=None,
+            ca_bundle_path=None,
             ):
         """Create a ConfidantClient object.
 
@@ -92,6 +93,9 @@ class ConfidantClient(object):
             verify:  Whether we verify the servers TLS certificate.
             kms_endpoint_url: A URL to override the default endpoint used to
                 access the KMS service. Default: None
+            ca_bundle_path: Path to the CA bundle to verify against when making
+                TLS connections to the Confidant API. Default: None (system
+                default)
         """
         # Set defaults
         self.config = {
@@ -106,7 +110,8 @@ class ConfidantClient(object):
             'retries': 0,
             'backoff': 1,
             'verify': True,
-            'kms_endpoint_url': None
+            'kms_endpoint_url': None,
+            'ca_bundle_path': None
         }
         if config_files is None:
             config_files = ['~/.confidant', '/etc/confidant/config']
@@ -126,7 +131,8 @@ class ConfidantClient(object):
             'backoff': backoff,
             'assume_role': assume_role,
             'verify': verify,
-            'kms_endpoint_url': kms_endpoint_url
+            'kms_endpoint_url': kms_endpoint_url,
+            'ca_bundle_path': ca_bundle_path
         }
         for key, val in args_config.items():
             if val is not None:
@@ -297,7 +303,8 @@ class ConfidantClient(object):
             response = self._execute_request(
                 'get',
                 '{0}/v1/services/{1}'.format(self.config['url'], service),
-                expected_return_codes=[200, 404]
+                expected_return_codes=[200, 404],
+                verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
             logging.exception('Error with executing request')
@@ -333,7 +340,8 @@ class ConfidantClient(object):
             response = self._execute_request(
                 'get',
                 '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
-                expected_return_codes=[200, 404]
+                expected_return_codes=[200, 404],
+                verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
             logging.exception('Error with executing request')
@@ -609,6 +617,7 @@ class ConfidantClient(object):
                 timeout=5,
                 headers=JSON_HEADERS,
                 data=json.dumps(data),
+                verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
             logging.exception('Error with executing request')
@@ -687,7 +696,7 @@ class ConfidantClient(object):
                 '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
                 timeout=5,
                 headers=JSON_HEADERS,
-                data=json.dumps(data)
+                verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
             logging.exception('Error with executing request')
@@ -712,7 +721,8 @@ class ConfidantClient(object):
         try:
             response = self._execute_request(
                 'get',
-                '{0}/v1/blind_credentials'.format(self.config['url'])
+                '{0}/v1/blind_credentials'.format(self.config['url']),
+                verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
             logging.exception('Error with executing request')
