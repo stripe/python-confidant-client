@@ -44,7 +44,8 @@ def _get_client_from_args(args):
         retries=args.retries,
         config_files=config_files,
         profile=args.profile,
-        kms_endpoint_url=args.kms_endpoint_url
+        kms_endpoint_url=args.kms_endpoint_url,
+        ca_bundle_path=args.ca_bundle_path
     )
     return client
 
@@ -137,6 +138,10 @@ def _parse_args():
     parser.add_argument(
         '--kms-endpoint-url',
         help='Use a different endpoint url for the KMS service.'
+    )
+    parser.add_argument(
+        '--ca-bundle-path',
+        help='Use a different CA bundle for verifying the TLS connection to Confidant.'
     )
     parser.add_argument(
         '--log-level',
