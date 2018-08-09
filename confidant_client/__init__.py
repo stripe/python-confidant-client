@@ -60,8 +60,7 @@ class ConfidantClient(object):
             backoff=None,
             config_files=None,
             profile=None,
-            kms_endpoint_url=None,
-            ca_bundle_path=None,
+            verify=None
             ):
         """Create a ConfidantClient object.
 
@@ -89,11 +88,7 @@ class ConfidantClient(object):
             configuration from. First file found will be used. Default:
                 ['~/.confidant', '/etc/confidant/config']
             profile: profile to read config values from.
-            kms_endpoint_url: A URL to override the default endpoint used to
-                access the KMS service. Default: None
-            ca_bundle_path: Path to the CA bundle to verify against when making
-                TLS connections to the Confidant API. Default: None (system
-                default)
+            verify:  Whether we verify the servers TLS certificate.
         """
         # Set defaults
         self.config = {
@@ -107,8 +102,7 @@ class ConfidantClient(object):
             'region': None,
             'retries': 0,
             'backoff': 1,
-            'kms_endpoint_url': None,
-            'ca_bundle_path': None
+            'verify': True
         }
         if config_files is None:
             config_files = ['~/.confidant', '/etc/confidant/config']
@@ -127,14 +121,14 @@ class ConfidantClient(object):
             'region': region,
             'backoff': backoff,
             'assume_role': assume_role,
-            'kms_endpoint_url': kms_endpoint_url,
-            'ca_bundle_path': ca_bundle_path
+            'verify': verify
         }
         for key, val in args_config.items():
             if val is not None:
                 self.config[key] = val
         # Use session to re-try failed requests.
         self.request_session = requests.Session()
+        self.request_session.verify = self.config['verify']
         for proto in ['http://', 'https://']:
             self.request_session.mount(
                 proto,

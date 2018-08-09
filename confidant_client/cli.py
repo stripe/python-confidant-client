@@ -46,8 +46,7 @@ def _get_client_from_args(args):
         retries=args.retries,
         config_files=config_files,
         profile=args.profile,
-        kms_endpoint_url=args.kms_endpoint_url,
-        ca_bundle_path=args.ca_bundle_path
+        verify=args.verify
     )
     return client
 
@@ -79,6 +78,14 @@ def _parse_args():
         '--url',
         help=('url of the confidant server. i.e.'
               ' https://confidant-production.example.com')
+    )
+    parser.add_argument(
+        '-v',
+        '--verify-ssl',
+        help='Whether we verify the servers TLS certificate',
+        action='store_true',
+        dest='verify',
+        default=True
     )
     parser.add_argument(
         '--retries',
