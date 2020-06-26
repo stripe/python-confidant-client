@@ -696,6 +696,7 @@ class ConfidantClient(object):
                 '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
                 timeout=5,
                 headers=JSON_HEADERS,
+                data=json.dumps(data),
                 verify=self.config['ca_bundle_path']
             )
         except RequestExecutionError:
