@@ -63,6 +63,7 @@ class ConfidantClient(object):
             verify=None,
             kms_endpoint_url=None,
             ca_bundle_path=None,
+            timeout=None
             ):
         """Create a ConfidantClient object.
 
@@ -96,6 +97,7 @@ class ConfidantClient(object):
             ca_bundle_path: Path to the CA bundle to verify against when making
                 TLS connections to the Confidant API. Default: None (system
                 default)
+            timeout: Connect and read timeout in seconds. Default: 5
         """
         # Set defaults
         self.config = {
@@ -111,7 +113,8 @@ class ConfidantClient(object):
             'backoff': 1,
             'verify': True,
             'kms_endpoint_url': None,
-            'ca_bundle_path': None
+            'ca_bundle_path': None,
+            'timeout': 5
         }
         if config_files is None:
             config_files = ['~/.confidant', '/etc/confidant/config']
@@ -132,7 +135,8 @@ class ConfidantClient(object):
             'assume_role': assume_role,
             'verify': verify,
             'kms_endpoint_url': kms_endpoint_url,
-            'ca_bundle_path': ca_bundle_path
+            'ca_bundle_path': ca_bundle_path,
+            'timeout': timeout
         }
         for key, val in args_config.items():
             if val is not None:
@@ -614,7 +618,6 @@ class ConfidantClient(object):
             response = self._execute_request(
                 'post',
                 '{0}/v1/blind_credentials'.format(self.config['url']),
-                timeout=5,
                 headers=JSON_HEADERS,
                 data=json.dumps(data),
                 verify=self.config['ca_bundle_path']
@@ -694,7 +697,6 @@ class ConfidantClient(object):
             response = self._execute_request(
                 'put',
                 '{0}/v1/blind_credentials/{1}'.format(self.config['url'], id),
-                timeout=5,
                 headers=JSON_HEADERS,
                 data=json.dumps(data),
                 verify=self.config['ca_bundle_path']
@@ -850,7 +852,6 @@ class ConfidantClient(object):
             method,
             url,
             expected_return_codes=[200],
-            timeout=2,
             **kwargs
             ):
         try:
@@ -859,7 +860,7 @@ class ConfidantClient(object):
                     url,
                     auth=(self._get_username(), self._get_token()),
                     allow_redirects=False,
-                    timeout=timeout,
+                    timeout=self.config['timeout'],
                     **kwargs
                 )
             elif method == 'post':
@@ -867,7 +868,7 @@ class ConfidantClient(object):
                     url,
                     auth=(self._get_username(), self._get_token()),
                     allow_redirects=False,
-                    timeout=timeout,
+                    timeout=self.config['timeout'],
                     **kwargs
                 )
             elif method == 'put':
@@ -875,7 +876,7 @@ class ConfidantClient(object):
                     url,
                     auth=(self._get_username(), self._get_token()),
                     allow_redirects=False,
-                    timeout=timeout,
+                    timeout=self.config['timeout'],
                     **kwargs
                 )
             else:
