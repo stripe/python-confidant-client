@@ -6,7 +6,7 @@ flake8==2.3.0
 # Measures code coverage and emits coverage reports
 # Licence: BSD
 # Upstream url: https://pypi.python.org/pypi/coverage
-coverage==3.7.1
+coverage==5.1
 
 # nose makes testing easier
 # License: GNU Library or Lesser General Public License (LGPL)
@@ -21,4 +21,4 @@ mock==1.0.1
 # License: MIT
 # Upstream url: https://github.com/benjaminp/six
 # Use: Python 2/3 compatiability
-six==1.10.0
+six==1.14.0
