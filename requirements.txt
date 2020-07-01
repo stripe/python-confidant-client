@@ -21,4 +21,4 @@ mock==1.0.1
 # License: MIT
 # Upstream url: https://github.com/benjaminp/six
 # Use: Python 2/3 compatiability
-six==1.10.0
+six==1.14.0
