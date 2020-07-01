@@ -134,7 +134,7 @@ def jinja_format(data, template_file):
             if not os.path.exists(template):
                 raise jinja2.TemplateNotFound(template)
             with open(template) as f:
-                source = f.read().decode('utf-8')
+                source = f.read()
             return source, template, lambda: False
 
     combined_credentials = combined_credential_pair_format(data)
