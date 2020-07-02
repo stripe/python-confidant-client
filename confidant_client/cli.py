@@ -48,7 +48,8 @@ def _get_client_from_args(args):
         profile=args.profile,
         verify=args.verify,
         kms_endpoint_url=args.kms_endpoint_url,
-        ca_bundle_path=args.ca_bundle_path
+        ca_bundle_path=args.ca_bundle_path,
+        timeout=args.timeout
     )
     return client
 
@@ -94,6 +95,12 @@ def _parse_args():
         help=('Number of retries that should be attempted on confidant server'
               ' errors. Default 0.'),
         type=int
+    )
+    parser.add_argument(
+        '--timeout',
+        help=('Connect and read timeout in seconds to confidant server.'
+              ' Default 5.'),
+        type=int,
     )
     parser.add_argument(
         '-k',
@@ -152,7 +159,8 @@ def _parse_args():
     )
     parser.add_argument(
         '--ca-bundle-path',
-        help='Use a different CA bundle for verifying the TLS connection to Confidant.'
+        help='Use a different CA bundle for verifying the TLS connection'
+             ' to Confidant.'
     )
     parser.add_argument(
         '--log-level',
